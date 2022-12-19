@@ -5,7 +5,7 @@ Review-companies-website:
 
 <h3>User Stories</h3>
 <ul>
-  <li> As visitor I can see the home page and view some reviews about companies</li>
+  <li> As a visitor I can see the home page and view some reviews about companies</li>
   <li> As a user I can register in order to have an account on the platform</li>
   <li> As a user I can log in to see all the reviews about Companies </li>
   <li> As a user I can search by company name,category,city, or the most having good reviews</li>
