@@ -10,4 +10,28 @@ Review-companies-website:
   <li> As a user I can log in to see all the reviews about Companies </li>
   <li> As a user I can search by company name,category,city, or the most having good reviews</li>
   <li> As a user I can view reviews and comments about a company </li>
+  <li> As a user I can comment,like,dislike on comments of others</li>
+  <li> As a user I can report a comment to the manager</li>
+  <li> As a user I can edit my account </li>
+  <li> As a user I can delete my account </li>
+  <li> As a user I can logout </li>
+  <li> As a user I can follow a company to have notification </li>
+  <li> As a user I can recieve notifications about an interaction on my comment</li>
+  <li> As a manager i can login</li>
+  <li> As a manager i can logout</li>
+  <li> As a manager i can add companies edit delete</li>
+  <li> As a manager i can view and delete comments</li>
+  <li> As a manager i can view the reports of users</li>
+  <li> As a manager i can block a user</li>
+  <li> As an admin i can have the same roles of manager</li>
+  <li> As an admin i can add manager,edit,delete</li>
 </ul>
+
+<h3>Technologies:</h3>
+<ul>
+  <li> Html Css (bootstrap/tailwind)</li>
+  <li> javascript vue js/react</li>
+  <li> mysql php laravel</li>
+</ul>
+
+
