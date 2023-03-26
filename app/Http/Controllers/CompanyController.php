@@ -15,7 +15,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $company =  Company::with('user','company')->latest()->get();
+        return  new CompanyCollection($company);
     }
 
     /**
@@ -36,7 +37,23 @@ class CompanyController extends Controller
      */
     public function store(StoreCompanyRequest $request)
     {
-        //
+        $company = Company::create([
+            'name'=>$request->name,
+            'website'=>$request->website,
+            'logo'=>$request->logo,
+            'founded'=>$request->founded,
+            'industry_id'=>$request->industry_id,  
+            'manager_id'=>1,
+            'employees'=>$request->employees, /*  can be removed in the future and be just api*/
+            'revenue'=>$request->revenue,    /*  can be removed in the future and be just api*/
+            'description'=>$request->manager_id,
+            'city_id'=>$request->city_id,
+            'address'=>$request->address,
+            'mission'=>$request->mission,
+            
+            // Auth::user()->id
+        ]);
+        return new CompanyResource($company);
     }
 
     /**
@@ -47,7 +64,8 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        $company =  Company::with('reviews','comments','followers','jobs')->where('id',$company->id)->get();
+        return  new CompanyCollection($company);
     }
 
     /**
@@ -70,7 +88,20 @@ class CompanyController extends Controller
      */
     public function update(UpdateCompanyRequest $request, Company $company)
     {
-        //
+        
+        $company->name        = $request->name;
+        $company->website     = $request->website;
+        $company->logo        = $request->logo;
+        $company->founded     = $request->founded;
+        $company->industry_id = $request->industry_id;
+        $company->employees   = $request->employees;
+        $company->revenue     = $request->revenue;
+        $company->description = $request->description;
+        $company->city_id     = $request->city_id;
+        $company->address     = $request->address;
+        $company->mission     = $request->mission;
+        $company->update();
+        return new CompanyResource($company);
     }
 
     /**
@@ -81,6 +112,8 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $company = Company::find($company->id)->where('user_id',1);
+        $company->delete();
+        return  response()->json(['success'=>'company deleted successufuly']);
     }
 }

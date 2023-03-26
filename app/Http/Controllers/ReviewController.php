@@ -15,7 +15,8 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        //
+        $review =  Review::with('user','company')->where('status',1)->latest()->get();
+        return  new ReviewCollection($reviews);
     }
 
     /**
@@ -36,7 +37,15 @@ class ReviewController extends Controller
      */
     public function store(StoreReviewRequest $request)
     {
-        //
+        $review = Review::create([
+            'content'=>$request->content,
+            'stars'=>$request->stars,
+            'status'=>1,
+            'company_id'=>$request->company_id,
+            'user_id'=>1,  
+            // Auth::user()->id
+        ]);
+        return new ReviewResource($review);
     }
 
     /**
@@ -47,7 +56,8 @@ class ReviewController extends Controller
      */
     public function show(Review $review)
     {
-        //
+        $review =  Review::with('company','user')->where('id',$review->id,'status',1)->get();
+        return  new ReviewCollection($review);
     }
 
     /**
@@ -70,7 +80,17 @@ class ReviewController extends Controller
      */
     public function update(UpdateReviewRequest $request, Review $review)
     {
-        //
+        $review->content = $request->content;
+        $review->stars = $request->stars;
+        $review->update();
+        return new ReviewResource($review); 
+    }
+
+    // change status of review from active to hidden or visversa
+    public function changeStatus(Review $review){
+        if($review->status==0)$review->status=1; else $review->status=0;
+        $review->update();
+        return new ReviewResource($review); 
     }
 
     /**
@@ -81,6 +101,9 @@ class ReviewController extends Controller
      */
     public function destroy(Review $review)
     {
-        //
+        $review = Review::find($review->id)->where('user_id',1);
+        $review->delete();
+        return  response()->json(['success'=>'review deleted successufuly']);
     }
+    
 }

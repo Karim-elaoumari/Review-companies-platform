@@ -24,7 +24,17 @@ class UpdateCompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' =>'required',
+            'logo' => 'required',
+            'website' => 'required',
+            'founded' => 'required',
+            'industry_id' => 'required',
+            'employees' => 'required',
+            'revenue' =>   'required',
+            'description' => 'required',
+            'city_id' => 'required',
+            'address' => 'required',
+            'mission' => 'required',
         ];
     }
 }

@@ -15,7 +15,8 @@ class IndustryController extends Controller
      */
     public function index()
     {
-        //
+        $industries =  Industry::all();
+        return  new IndustryCollection($industries);
     }
 
     /**

@@ -15,7 +15,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments =  Comment::with('user','company')->where('status',1)->latest()->get();
+        return  new CommentCollection($comments);
     }
 
     /**
@@ -25,7 +26,7 @@ class CommentController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -36,7 +37,14 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
+        $comment = Comment::create([
+            'content'=>$request->content,
+            'company_id'=>$request->company_id,
+            'status'=>1,
+            'user_id'=>1,  
+            // Auth::user()->id
+        ]);
+        return new CommentResource($comment);
     }
 
     /**
@@ -47,7 +55,8 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        //
+        $comment =  Comment::with('company','user')->where('id',$comment->id,'status',1)->get();
+        return  new CommentCollection($comment);
     }
 
     /**
@@ -70,9 +79,17 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        //
+        $comment->content = $request->content;
+        $comment->update();
+        return new CommentResource($comment); 
     }
 
+    // change status of comment from active to hidden or visversa
+    public function changeStatus(Comment $comment){
+        if($comment->status==0)$comment->status=1; else $comment->status=0;
+        $comment->update();
+        return new CommentResource($comment); 
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -81,6 +98,8 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment = Comment::find($comment->id)->where('user_id',1);
+        $comment->delete();
+        return  response()->json(['success'=>'comment deleted successufuly']);
     }
 }

@@ -2,10 +2,31 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Review extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'content',
+        'stars',
+        'status',
+        'company_id',
+        'user_id',
+    ];
+
+
+
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

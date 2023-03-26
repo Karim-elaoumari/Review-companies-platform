@@ -13,7 +13,7 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'content'=> 'required',
+            'company_id'=>'required'
         ];
     }
 }

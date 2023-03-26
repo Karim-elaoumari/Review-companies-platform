@@ -2,10 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Job extends Model
 {
     use HasFactory;
+
+
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class);
+    }
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

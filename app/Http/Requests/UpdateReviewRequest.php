@@ -24,7 +24,8 @@ class UpdateReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'content'  => 'required',
+            'stars'    => 'required',
         ];
     }
 }
