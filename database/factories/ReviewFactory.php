@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
+use App\Models\User;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,12 @@ class ReviewFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'content' => fake()->text(),
+            "status"=> 1,
+            'stars' => fake()->numberBetween($min = 1, $max = 5),
+            'user_id' => User::factory(),
+            'company_id' => Company::factory(),
         ];
+       
     }
 }

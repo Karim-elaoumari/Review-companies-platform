@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('logo');
             $table->string('website');
-            $table->integer('founded');
+            $table->datetime('founded');
             $table->foreignId('industry_id')->constrained('industries')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('manager_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('employees');

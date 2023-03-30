@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,10 @@ class CommentFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'content' => fake()->paragraphs(3, true),
+            "status"=> 1,
+            'user_id' => User::factory(),
+            'company_id' => Company::factory(),
         ];
     }
 }

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Job;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class JobSeeder extends Seeder
 {
@@ -14,6 +15,6 @@ class JobSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Job::factory()->count(3)->create();
     }
 }

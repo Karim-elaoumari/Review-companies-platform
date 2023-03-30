@@ -14,15 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-Route::apiresource('companies', CompanyController::class);
-Route::apiresource('comments', CommentController::class);
-Route::apiresource('reviews', ReviewController::class);
-Route::apiresource('counries', CountryController::class);
-Route::apiresource('industries', IndustriesController::class);
-Route::apiresource('jobs', JobController::class);
-Route::apiresource('notifications', NotificationController::class);
