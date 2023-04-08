@@ -18,7 +18,7 @@ class JobCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'Jobs' => $this->collection,
+            $this->collection,
         ];
     } 
 }
