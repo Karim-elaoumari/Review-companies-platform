@@ -18,13 +18,14 @@ return new class extends Migration
             $table->string('name');
             $table->string('logo');
             $table->string('website');
-            $table->datetime('founded');
+            $table->integer('founded');
             $table->foreignId('industry_id')->constrained('industries')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('manager_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('employees');
             $table->decimal('revenue', 20, 2);
             $table->longText('description');
-            $table->foreignId('city_id')->constrained('cities')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('country_code');
+            $table->string('city');
             $table->longText('address');
             $table->longText('mission');
             $table->timestamps();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Industry;
+use App\Http\Resources\IndustryCollection;
 use App\Http\Requests\StoreIndustryRequest;
 use App\Http\Requests\UpdateIndustryRequest;
 

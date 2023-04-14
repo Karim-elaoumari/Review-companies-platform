@@ -23,7 +23,8 @@ class Company extends Model
         'employees',
         'revenue',
         'description',
-        'city_id',
+        'city',
+        'country_code',
         'address',
         'mission'
     ];
@@ -38,7 +39,7 @@ class Company extends Model
     }
     public function manager()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
     public function jobs()
     {

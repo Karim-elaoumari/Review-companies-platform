@@ -18,7 +18,7 @@ class IndustryCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'Industries' => $this->collection,
+            $this->collection,
         ];
     } 
 }

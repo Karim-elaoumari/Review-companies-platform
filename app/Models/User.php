@@ -32,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
         'job_id',
         'email',
         'password',
+        'photo',
     ];
     public function job(){
         return $this->belongsTo(Job::class);
@@ -54,6 +55,7 @@ class User extends Authenticatable implements JWTSubject
         }
          if($insert){
             Mail::send('verify', ['code'=> $code,'url'=>$url,'type'=>$type], function($message){
+                $message->from('karimdet315@gmail.com');
                 $message->to($this->email);
                 $message->subject('verify your Email and join us');
             });

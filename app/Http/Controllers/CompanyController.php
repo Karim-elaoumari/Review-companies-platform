@@ -3,11 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Resources\CompanyResource;
+use App\Http\Resources\CompanyCollection;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 
 class CompanyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index','show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +22,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $company =  Company::with('user','company')->latest()->get();
-        return  new CompanyCollection($company);
+        $companies =  Company::with('manager')->latest()->get();
+        return  new CompanyCollection($companies);
     }
 
     /**
@@ -41,19 +48,20 @@ class CompanyController extends Controller
             'name'=>$request->name,
             'website'=>$request->website,
             'logo'=>$request->logo,
-            'founded'=>$request->founded,
-            'industry_id'=>$request->industry_id,  
-            'manager_id'=>1,
-            'employees'=>$request->employees, /*  can be removed in the future and be just api*/
-            'revenue'=>$request->revenue,    /*  can be removed in the future and be just api*/
-            'description'=>$request->manager_id,
-            'city_id'=>$request->city_id,
+            'founded'=>$request->foundation_year,
+            'industry_id'=>$request->industry, 
+            'manager_id'=>JWTAuth::user()->id,
+            'employees'=>$request->employees, 
+            'revenue'=>$request->revenue, 
+            'description'=>$request->description,
+            'city'=>$request->city,
+            'country_code'=>$request->country_code,
             'address'=>$request->address,
             'mission'=>$request->mission,
-            
-            // Auth::user()->id
         ]);
-        return new CompanyResource($company);
+
+        $companies =  Company::with('reviews','manager')->latest()->get();
+        return  new CompanyCollection($companies);
     }
 
     /**

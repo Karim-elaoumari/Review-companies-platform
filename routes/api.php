@@ -6,13 +6,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,7 +26,9 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 */
 Route::middleware('auth:api')->get('/auth_test', function (Request $request) {
     return response()->json([
-        'message' => 'You are logged in'],200);
+        'message' => 'You are logged in',
+        'user'=> new UserResource($request->user())
+    ],200);
 });
 
 Route::controller(AuthController::class)->group(function () {
@@ -42,10 +45,12 @@ Route::controller(UserController::class)->group(function () {
     Route::get('user','user');
     Route::get('users','users');
     Route::get('user/{id}','showOneUser');
-    Route::put('user/updatePassword','updatePassword');
-    Route::put('user/updateName','updateName');
-    Route::put('user/updateEmail','updateEmail');
+    Route::put('update_password','updatePassword');
+    Route::put('update_user_info','updateInfo');
+    Route::put('update_email','updateEmail');
     Route::put('user/update_user_role','updateUserRole');
 })->middleware('auth:api');
 Route::apiresource('jobs', JobController::class);
+Route::apiresource('industries', IndustryController::class);
+Route::apiresource('companies', CompanyController::class);
 

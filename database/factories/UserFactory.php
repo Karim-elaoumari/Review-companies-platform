@@ -22,6 +22,7 @@ class UserFactory extends Factory
             'first_name' => fake()->name(),
             'last_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'photo' => fake()->imageUrl(640, 480, 'people', true, 'Faker'),
             'email_verified_at' => now(),
             'speciality'=> fake()->sentence,
             'job_id'=> Job::factory(),

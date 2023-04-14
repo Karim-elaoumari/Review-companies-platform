@@ -13,7 +13,7 @@ class StoreCompanyRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,12 +27,13 @@ class StoreCompanyRequest extends FormRequest
             'name' =>'required',
             'logo' => 'required',
             'website' => 'required',
-            'founded' => 'required',
-            'industry_id' => 'required',
+            'foundation_year' => 'required',
+            'industry' => 'required',
             'employees' => 'required',
             'revenue' => 'required',
             'description' => 'required',
-            'city_id' => 'required',
+            'city' =>        'required',
+            'country_code' => 'required',
             'address' => 'required',
             'mission' => 'required',
         ];
