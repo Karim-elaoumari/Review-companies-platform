@@ -8,6 +8,7 @@ use App\Http\Resources\CompanyResource;
 use App\Http\Resources\CompanyCollection;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Http\Resources\CompanyReviewsResource;
 
 class CompanyController extends Controller
 {
@@ -22,8 +23,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies =  Company::with('manager')->latest()->get();
-        return  new CompanyCollection($companies);
+        $companies =  Company::with('manager','reviews')->latest()->get();
+        return  CompanyReviewsResource::collection($companies);
     }
 
     /**
@@ -59,7 +60,6 @@ class CompanyController extends Controller
             'address'=>$request->address,
             'mission'=>$request->mission,
         ]);
-
         $companies =  Company::with('reviews','manager')->latest()->get();
         return  new CompanyCollection($companies);
     }
@@ -94,22 +94,37 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCompanyRequest $request, Company $company)
+    public function update(StoreCompanyRequest $request, Company $company)
     {
         
-        $company->name        = $request->name;
-        $company->website     = $request->website;
-        $company->logo        = $request->logo;
-        $company->founded     = $request->founded;
-        $company->industry_id = $request->industry_id;
-        $company->employees   = $request->employees;
-        $company->revenue     = $request->revenue;
-        $company->description = $request->description;
-        $company->city_id     = $request->city_id;
-        $company->address     = $request->address;
-        $company->mission     = $request->mission;
-        $company->update();
-        return new CompanyResource($company);
+        // $company->name        = $request->name;
+        // $company->website     = $request->website;
+        // $company->logo        = $request->logo;
+        // $company->founded     = $request->founded;
+        // $company->industry_id = $request->industry_id;
+        // $company->employees   = $request->employees;
+        // $company->revenue     = $request->revenue;
+        // $company->description = $request->description;
+        // $company->city        = $request->city;
+        // $company->country_code = $request->country_code;
+        // $company->address     = $request->address;
+        // $company->mission     = $request->mission;
+        $company->update([
+            'name'=>$request->name,
+            'website'=>$request->website,
+            'logo'=>$request->logo,
+            'founded'=>$request->foundation_year,
+            'industry_id'=>$request->industry, 
+            'employees'=>$request->employees, 
+            'revenue'=>$request->revenue, 
+            'description'=>$request->description,
+            'city'=>$request->city,
+            'country_code'=>$request->country_code,
+            'address'=>$request->address,
+            'mission'=>$request->mission,
+       ]);
+       $companies =  Company::with('reviews','manager')->latest()->get();
+       return  CompanyReviewsResource::collection($companies);
     }
 
     /**

@@ -2,11 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\UserResource;
-use App\Http\Resources\IndustryResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CompanyResource extends JsonResource
+class CompanyReviewsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,13 +22,27 @@ class CompanyResource extends JsonResource
             'founded' => $this->founded,
             'industry' => new IndustryResource($this->industry),
             'manager' => new UserResource($this->manager),
-            'description' => $this->description,
             'employees' => $this->employees,
+            'description' => $this->description,
             'revenue' => $this->revenue,
             'city' => $this->city,
             'country_code' => $this->country_code,
             'address' => $this->address,
             'mission' => $this->mission,
+            'stars' => $this->getStars($this->reviews),
+            'reviews_count' => $this->reviews->count(),
+            'reviews'=> ReviewResource::collection($this->reviews),
         ];
+    }
+    protected function getStars($reviews)
+    {
+        $stars = 0;
+        foreach ($reviews as $review) {
+            $stars += $review->stars;
+        }
+        if($reviews->count() == 0) {
+            return 0;
+        }
+        return $stars/$reviews->count();
     }
 }

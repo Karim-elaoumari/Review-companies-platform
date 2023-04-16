@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('city');
             $table->longText('address');
             $table->longText('mission');
+            $table->boolean('deleted')->nullable()->default(false);
             $table->timestamps();
 
         });
