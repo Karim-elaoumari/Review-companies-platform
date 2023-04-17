@@ -23,7 +23,7 @@ class CompanyFactory extends Factory
     {
         $industries = Industry::pluck('id')->toArray();
         return [
-            'name' => fake()->sentence,
+            'name' => fake()->name(),
             'logo' => fake()->imageUrl(),
             'website' => fake()->url(),
             'founded' => fake()->year(),

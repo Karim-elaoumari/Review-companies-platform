@@ -41,14 +41,6 @@ class Company extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function jobs()
-    {
-        return $this->belongsToMany(Job::class);
-    }
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
     public function reviews()
     {
         return $this->hasMany(Review::class);

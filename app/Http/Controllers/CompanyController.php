@@ -9,6 +9,7 @@ use App\Http\Resources\CompanyCollection;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Http\Resources\CompanyReviewsResource;
+use App\Http\Resources\CompanyReviewsCommentsResource;
 
 class CompanyController extends Controller
 {
@@ -70,10 +71,13 @@ class CompanyController extends Controller
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function show(Company $company)
+    public function show($name)
     {
-        $company =  Company::with('reviews','comments','followers','jobs')->where('id',$company->id)->get();
-        return  new CompanyCollection($company);
+        $name = str_replace('-',' ',$name);
+        $company =  Company::with('reviews')->where('name',$name)->first();
+        if(!$company)
+            return response()->json(['message'=>'Company not found'],404);
+        return  new CompanyReviewsCommentsResource($company);
     }
 
     /**

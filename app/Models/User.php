@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use App\Models\Review;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,10 @@ class User extends Authenticatable implements JWTSubject
     ];
     public function job(){
         return $this->belongsTo(Job::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function sendConfirmationEmail($type)

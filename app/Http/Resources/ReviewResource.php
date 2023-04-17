@@ -19,7 +19,9 @@ class ReviewResource extends JsonResource
             'content' => $this->content,
             'stars' => $this->stars,
             'status' => $this->status,
-            'reviewer' => $this->reviewer,
+            'reviewer' => new UserResource($this->user),
+            'date' => $this->created_at->format('d/m/Y'),
+            'time' => $this->created_at->format('H:i'),
         ];
     }
 }

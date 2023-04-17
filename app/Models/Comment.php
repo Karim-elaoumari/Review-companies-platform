@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Review;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,9 +18,9 @@ class Comment extends Model
         'status'
     ];
 
-    public function company()
+    public function review()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Review::class);
     }
     public function user()
     {
