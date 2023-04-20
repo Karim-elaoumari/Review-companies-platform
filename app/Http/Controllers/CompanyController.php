@@ -24,10 +24,15 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies =  Company::with('manager','reviews')->latest()->get();
+        $companies =  Company::with('manager','reviews')->where('deleted',false)->latest()->get();
+        return  CompanyReviewsResource::collection($companies);
+
+    }
+    public function getManagerCompanies()
+    {
+        $companies = Company::with('manager','reviews')->where('manager_id',JWTAuth::user()->id)->where('deleted',0)->latest()->get();
         return  CompanyReviewsResource::collection($companies);
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -61,8 +66,7 @@ class CompanyController extends Controller
             'address'=>$request->address,
             'mission'=>$request->mission,
         ]);
-        $companies =  Company::with('reviews','manager')->latest()->get();
-        return  new CompanyCollection($companies);
+        $this->index();
     }
 
     /**
@@ -76,7 +80,7 @@ class CompanyController extends Controller
         $name = str_replace('-',' ',$name);
         $company =  Company::with('reviews')->where('name',$name)->first();
         if(!$company)
-            return response()->json(['message'=>'Company not found'],404);
+        return response()->json(['message'=>'Company not found'],404);
         return  new CompanyReviewsCommentsResource($company);
     }
 
@@ -101,18 +105,7 @@ class CompanyController extends Controller
     public function update(StoreCompanyRequest $request, Company $company)
     {
         
-        // $company->name        = $request->name;
-        // $company->website     = $request->website;
-        // $company->logo        = $request->logo;
-        // $company->founded     = $request->founded;
-        // $company->industry_id = $request->industry_id;
-        // $company->employees   = $request->employees;
-        // $company->revenue     = $request->revenue;
-        // $company->description = $request->description;
-        // $company->city        = $request->city;
-        // $company->country_code = $request->country_code;
-        // $company->address     = $request->address;
-        // $company->mission     = $request->mission;
+        
         $company->update([
             'name'=>$request->name,
             'website'=>$request->website,
@@ -141,6 +134,12 @@ class CompanyController extends Controller
     {
         $company = Company::find($company->id)->where('user_id',1);
         $company->delete();
+        return  response()->json(['success'=>'company deleted  successufuly']);
+    }
+    public function deleteCompany($id)
+    {
+        $company = Company::findOrFail($id)->where('manager_id',JWTAuth::user()->id);
+        $company->update(['deleted'=>true]);
         return  response()->json(['success'=>'company deleted successufuly']);
     }
 }

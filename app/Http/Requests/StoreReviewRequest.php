@@ -25,8 +25,8 @@ class StoreReviewRequest extends FormRequest
     {
         return [
             'content'=> 'required',
-            'company_id'=>'required',
             'stars'=> 'required',
+            'company_id'=>'required',
             
         ];
     }

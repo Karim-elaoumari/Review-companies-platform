@@ -15,7 +15,7 @@ class ReviewCommentsResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        return  [
             'id' => $this->id,
             'content' => $this->content,
             'stars' => $this->stars,

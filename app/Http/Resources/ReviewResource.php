@@ -14,14 +14,19 @@ class ReviewResource extends JsonResource
      */
     public function toArray($request)
     {
+       
         return [
-            'id' => $this->id,
-            'content' => $this->content,
-            'stars' => $this->stars,
-            'status' => $this->status,
-            'reviewer' => new UserResource($this->user),
-            'date' => $this->created_at->format('d/m/Y'),
-            'time' => $this->created_at->format('H:i'),
-        ];
+                'id' => $this->id,
+                'content' => $this->content,
+                'stars' => $this->stars,
+                'status' => $this->status,
+                'reviewer' => new UserResource($this->user),
+                'date' => $this->created_at->format('d/m/Y'),
+                'time' => $this->created_at->format('H:i'),
+                'comments' => CommentResource::collection($this->comments),
+                'company_id' => $this->company->id,
+                'company_name' => $this->company->name,
+                'company_logo' => $this->company->logo
+            ];
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -53,4 +54,13 @@ Route::controller(UserController::class)->group(function () {
 Route::apiresource('jobs', JobController::class);
 Route::apiresource('industries', IndustryController::class);
 Route::apiresource('companies', CompanyController::class);
+Route::controller(CompanyController::class)->group(function () {
+    Route::get('companies_manager','getManagerCompanies')->middleware('auth:api');
+    Route::post('delete_company/{id}','deleteCompany')->middleware('auth:api');
+
+});
+Route::apiresource('reviews', ReviewController::class);
+Route::controller(ReviewController::class)->group(function () {
+    Route::get('reviews_manager','getRelatedReviews')->middleware('auth:api');
+});
 
