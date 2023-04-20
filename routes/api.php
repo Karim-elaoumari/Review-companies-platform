@@ -60,7 +60,8 @@ Route::controller(CompanyController::class)->group(function () {
 
 });
 Route::apiresource('reviews', ReviewController::class);
-Route::controller(ReviewController::class)->group(function () {
+Route::controller(ReviewController::class)->group(function (){
     Route::get('reviews_manager','getRelatedReviews')->middleware('auth:api');
+    Route::post('delete_review/{id}','deleteReview')->middleware('auth:api');
 });
 

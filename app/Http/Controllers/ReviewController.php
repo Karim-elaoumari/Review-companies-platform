@@ -87,8 +87,8 @@ class ReviewController extends Controller
      */
     public function show(Review $review)
     {
-        $review =  Review::with('company','user')->where('id',$review->id,'status',1)->get();
-        return  new ReviewCollection($review);
+        $review =  Review::with('company','comments','user')->where('id',$review->id)->where('status',1)->first();
+        return new  ReviewResource($review);
     }
 
     /**
@@ -135,6 +135,13 @@ class ReviewController extends Controller
         $review = Review::find($review->id)->where('user_id',1);
         $review->delete();
         return  response()->json(['success'=>'review deleted successufuly']);
+    }
+    public function deleteReview($id){
+        $review = Review::findOrFail($id)->whereHas('company', function($q){
+            $q->where('manager_id', JWTAuth::user()->id);
+        });
+        $review->update(['status'=>0]);
+        return  response()->json(['message'=>'Review deleted successufuly'],200);
     }
     
 }
