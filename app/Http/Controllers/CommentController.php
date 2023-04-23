@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 
 class CommentController extends Controller
 {
+    
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index','show']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +24,6 @@ class CommentController extends Controller
         $comments =  Comment::with('user','company')->where('status',1)->latest()->get();
         return  new CommentCollection($comments);
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -39,12 +44,12 @@ class CommentController extends Controller
     {
         $comment = Comment::create([
             'content'=>$request->content,
-            'company_id'=>$request->company_id,
+            'review_id'=>$request->review_id,
             'status'=>1,
-            'user_id'=>1,  
-            // Auth::user()->id
+            'user_id'=>JWTAuth::user()->id,  
+           
         ]);
-        return new CommentResource($comment);
+        return response()->json(['message'=>'comment created successfully'], 201);
     }
 
     /**
@@ -101,5 +106,15 @@ class CommentController extends Controller
         $comment = Comment::find($comment->id)->where('user_id',1);
         $comment->delete();
         return  response()->json(['success'=>'comment deleted successufuly']);
+    }
+    public function  deleteComment($id){
+        $comment = Comment::where('id',$id)->where('user_id',JWTAuth::user()->id)->first();
+        if($comment){
+            $comment->update(['status'=>0]);
+            return  response()->json(['message'=>'Comment deleted successufuly']);
+        }
+        else{
+            return  response()->json(['message'=>'not found'],404);
+        }
     }
 }

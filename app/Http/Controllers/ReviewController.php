@@ -14,6 +14,8 @@ class ReviewController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
+        $this->middleware('admin_check')->only(['restoreReview']);
+        $this->middleware('manager_check')->only(['getRelatedReviews']);
     }
     /**
      * Display a listing of the resource.
@@ -58,6 +60,7 @@ class ReviewController extends Controller
     {
         // if the user hase reviewed a company 5 times in one day he can't review it again
         $reviews_user = Review::where('user_id', JWTAuth::user()->id)
+        ->where('status',1)
         ->where('company_id', $request->company_id)
         ->where('created_at', '>=', Carbon::now()->subDay())
         ->get();
@@ -117,12 +120,6 @@ class ReviewController extends Controller
         return new ReviewResource($review); 
     }
 
-    // change status of review from active to hidden or visversa
-    public function changeStatus(Review $review){
-        if($review->status==0)$review->status=1; else $review->status=0;
-        $review->update();
-        return new ReviewResource($review); 
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -132,16 +129,27 @@ class ReviewController extends Controller
      */
     public function destroy(Review $review)
     {
-        $review = Review::find($review->id)->where('user_id',1);
+        $review = Review::findOrFail($review->id);
         $review->delete();
         return  response()->json(['success'=>'review deleted successufuly']);
     }
     public function deleteReview($id){
-        $review = Review::findOrFail($id)->whereHas('company', function($q){
+        $review = Review::whereHas('company', function($q){
             $q->where('manager_id', JWTAuth::user()->id);
-        });
+        })->orWhere('user_id',JWTAuth::user()->id)->where('id',$id)->first();
         $review->update(['status'=>0]);
-        return  response()->json(['message'=>'Review deleted successufuly'],200);
+        if($review){
+            $review->update(['status'=>0]);
+            return  response()->json(['message'=>'Review deleted successufuly'],200);
+        }
+        else{
+            return  response()->json(['message'=>'not found or you dont have permission'],404);
+        }
+    }
+    public function restoreReview($id){
+        $review = Review::findOrFail($id);
+        $review->update(['status'=>1]);
+        return  response()->json(['message'=>'Review restored successufuly'],200);
     }
     
 }

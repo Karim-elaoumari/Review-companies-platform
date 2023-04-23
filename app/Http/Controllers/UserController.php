@@ -16,6 +16,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
+        $this->middleware('admin_check')->only(['users','switchUserToManager','switchManagerToUser']);
         
     }
     public function updatePassword(request $request){
@@ -89,25 +90,61 @@ class UserController extends Controller
         $user = JWTAuth::user();
         return new UserResource($user);
     }
-    // public function users(){
-    //     $users = User::with('roles')->get();
-    //     return new UserCollection($users);
-    // }
-    // public function showOneUser($id){
-    //     $user = User::find($id);
-    //     return new UserResource($user);
-    // }
-    // public function updateUserRole(request $request){
-    //     $request->validate([
-    //         'user_id' =>'required|exists:users,id',
-    //         'newRole'=>'required|exists:roles,name',
-    //     ]);
-    //     $user  = User::with('roles')->findOrFail($request->user_id);
-    //     $user->syncRoles($request->newRole);
-    //     return  response()->json([
-    //         'success'=>'User Role updated successfully',
-    //         'user'=> new UserResource($user)],202);
+    public function users(){
+        $role = Role::where('name','admin')->first();
+        $users = User::with('role')->whereNot('role_id',$role->id)->get();
+        return UserResource::collection($users);
+    }
+    public function switchUserToManager(request $request){
+        $request->validate([
+            'user_id' =>'required|exists:users,id',
+        ]);
+        $user = User::findOrFail($request->user_id);
+        if($user->role->name=='user'){
+            $role = Role::where('name','manager')->first();
+            $user->role = $role;
+            $user->save();
+            return  response()->json([
+                'message'=>'User Role updated successfully'],200);
+        }
+        else{
+            return  response()->json([
+                'message'=>'this is not a User to be switched to manager'],422);
 
-    // }
-
+        }
+        
+        
+    }
+    public function switchManagerToUser(request $request){
+        $request->validate([
+            'user_id' =>'required|exists:users,id',
+            'second_user_id' =>'required|exists:users,id',
+        ]);
+        $user = User::findOrFail($request->user_id);
+        $second_user = User::findOrFail($request->second_user_id);
+        if($user->role->name=='manager' && $second_user->role->name=='manager'){
+            if(self::switchAllCompaniesToAnotherManager($request->user_id,$request->second_user_id)){
+                $role = Role::where('name','user')->first();
+                $user->role = $role;
+                $user->save();
+                return  response()->json([
+                    'message'=>'User Role updated successfully'],200);
+            }
+            else{
+                return  response()->json(['message'=>'Erorr will switching companies to another manager'],403);
+            }
+           
+        }
+        else{
+            return  response()->json(['message'=>'this is not a manager to be switched to user  or the second user that you what to switch companies in not manager'],422);
+        }
+    }
+    private function switchAllCompaniesToAnotherManager($manager_id,$second_manager_id){
+        $companies = Company::where('manager_id',$manager_id)->latest()->get();
+        foreach($companies as $company){
+            $company->manager_id = $second_manager_id;
+            $company->save();
+        }
+        return true;
+    }
 }

@@ -15,6 +15,10 @@ use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->only(['logout']);
+    }
 
     public function login(Request $request)
     {
@@ -178,7 +182,7 @@ class AuthController extends Controller
             ]
         ]);
     }
-    public function checkIfEmailVerified($user){
+    protected function checkIfEmailVerified($user){
         if($user->email_verified_at == NULL){
             $user->sendConfirmationEmail('Verify Email');
             return true;

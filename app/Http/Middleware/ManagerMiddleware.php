@@ -4,8 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class ApiKeyMiddleware
+class ManagerMiddleware
 {
     /**
      * Handle an incoming request.
@@ -14,13 +15,11 @@ class ApiKeyMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next)
-{
-    $apiKey = $request->header('X-Api-Key');
-
-    if (!$apiKey || $apiKey !== 'charika_app') {
-        return response()->json(['error' => "Unauthorized don't have api key"], 401);
+    public function handle(Request $request, Closure $next)
+    {
+        if(JWTAuth::user()->role->name!='manager'){
+            return response()->json(['message' => "Your Don't have permission to make this action"], 403);
+        }
+        return $next($request);
     }
-    return $next($request);
-}
 }

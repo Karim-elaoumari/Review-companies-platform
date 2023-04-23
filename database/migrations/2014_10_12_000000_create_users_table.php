@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('speciality');
             $table->foreignId('job_id')->constrained('jobs')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade')->onUpdate('cascade');
             $table->string('email')->unique();
             $table->string('photo')->nullable();
             $table->timestamp('email_verified_at')->nullable();

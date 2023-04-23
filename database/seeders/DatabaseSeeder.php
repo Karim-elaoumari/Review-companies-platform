@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Database\Seeders\JobSeeder;
 use Illuminate\Database\Seeder;
+use Database\Seeders\RoleSeeder;
 use Database\Seeders\ReviewSeeder;
 use Database\Seeders\CommentSeeder;
 use Database\Seeders\CompanySeeder;
@@ -22,13 +23,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             IndustrySeeder::class,
+            RoleSeeder::class,
             JobSeeder::class,
             CompanySeeder::class,
             ReviewSeeder::class,
             CommentSeeder::class,
-
-        ]);
-
-       
+        ]);   
     }
 }

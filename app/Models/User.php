@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use App\Models\Role;
 use App\Models\Review;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
@@ -37,6 +38,9 @@ class User extends Authenticatable implements JWTSubject
     ];
     public function job(){
         return $this->belongsTo(Job::class);
+    }
+    public function role(){
+        return $this->belongsTo(Role::class);
     }
     public function reviews()
     {

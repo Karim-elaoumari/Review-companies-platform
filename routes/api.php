@@ -7,6 +7,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -63,5 +64,10 @@ Route::apiresource('reviews', ReviewController::class);
 Route::controller(ReviewController::class)->group(function (){
     Route::get('reviews_manager','getRelatedReviews')->middleware('auth:api');
     Route::post('delete_review/{id}','deleteReview')->middleware('auth:api');
+});
+
+Route::apiresource('comments', CommentController::class);
+Route::controller(CommentController::class)->group(function (){
+    Route::post('delete_comment/{id}','deleteComment')->middleware('auth:api');
 });
 

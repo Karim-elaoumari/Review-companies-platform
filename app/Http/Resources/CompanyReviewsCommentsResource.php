@@ -30,9 +30,9 @@ class CompanyReviewsCommentsResource extends JsonResource
             'country_code' => $this->country_code,
             'address' => $this->address,
             'mission' => $this->mission,
-            'stars' => $this->getStars($this->reviews),
-            'reviews_count' => $this->reviews->count(),
-            'reviews'=> ReviewCommentsResource::collection($this->reviews),
+            'stars' => $this->getStars($this->reviews->where('status',1)),
+            'reviews_count' => $this->reviews->where('status',1)->count(),
+            'reviews'=> ReviewCommentsResource::collection($this->reviews->where('status',1)),
         ];
     }
     protected function getStars($reviews)

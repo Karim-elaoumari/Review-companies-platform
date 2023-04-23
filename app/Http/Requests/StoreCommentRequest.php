@@ -25,7 +25,7 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'content'=> 'required',
-            'company_id'=>'required'
+            'review_id'=>'required'
         ];
     }
 }

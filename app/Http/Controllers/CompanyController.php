@@ -16,6 +16,8 @@ class CompanyController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
+        $this->middleware('admin_check')->only(['restoreCompany']);
+        $this->middleware('manager_check')->only(['getManagerCompanies']);
     }
     /**
      * Display a listing of the resource.
@@ -132,7 +134,7 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        $company = Company::find($company->id)->where('user_id',1);
+        $company = Company::find($company->id);
         $company->delete();
         return  response()->json(['success'=>'company deleted  successufuly']);
     }
@@ -141,5 +143,10 @@ class CompanyController extends Controller
         $company = Company::findOrFail($id)->where('manager_id',JWTAuth::user()->id);
         $company->update(['deleted'=>true]);
         return  response()->json(['success'=>'company deleted successufuly']);
+    }
+    public function restoreCompany($id){
+        $company = Company::findOrFail($id);
+        $company->update(['deleted'=>false]);
+        return  response()->json(['success'=>'company restored successufuly']);
     }
 }
