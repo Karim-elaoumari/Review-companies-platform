@@ -24,6 +24,10 @@ class ReviewCommentsResource extends JsonResource
             'date' => $this->created_at->format('d/m/Y'),
             'time' => $this->created_at->format('H:i'),
             'comments' => CommentResource::collection($this->comments->where('status',1)),
+            'company_id' => $this->company->id,
+            'company_name' => $this->company->name,
+            'company_logo' => $this->company->logo
+           
         ];
     }
 }

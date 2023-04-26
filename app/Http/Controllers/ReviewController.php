@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use Illuminate\Support\Carbon;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Http\Resources\ReviewResource;
+use App\Http\Resources\ReviewCommentsResource;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
 
@@ -27,7 +27,14 @@ class ReviewController extends Controller
         $reviews =  Review::with('company','comments','user')->where('status',1)
         ->latest()
         ->get();
-        return  ReviewResource::collection($reviews);
+        return  ReviewCommentsResource::collection($reviews);
+    }
+    public function getAllReviews()
+    {
+        $reviews =  Review::with('company','comments','user')
+        ->latest()
+        ->get();
+        return  ReviewCommentsResource::collection($reviews);
     }
     public function getRelatedReviews()
     {  
@@ -38,7 +45,7 @@ class ReviewController extends Controller
         })
         ->latest()
         ->get();
-        return  ReviewResource::collection($reviews);
+        return  ReviewCommentsResource::collection($reviews);
     }
     /**
      * Show the form for creating a new resource.
@@ -91,7 +98,7 @@ class ReviewController extends Controller
     public function show(Review $review)
     {
         $review =  Review::with('company','comments','user')->where('id',$review->id)->where('status',1)->first();
-        return new  ReviewResource($review);
+        return new  ReviewCommentsResource($review);
     }
 
     /**
@@ -117,7 +124,7 @@ class ReviewController extends Controller
         $review->content = $request->content;
         $review->stars = $request->stars;
         $review->update();
-        return new ReviewResource($review); 
+        return new ReviewCommentsResource($review); 
     }
 
 

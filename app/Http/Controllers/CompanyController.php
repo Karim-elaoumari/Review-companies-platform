@@ -15,7 +15,7 @@ class CompanyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index','show']);
+        $this->middleware('auth:api')->except(['index','show','getTwoCompanies']);
         $this->middleware('admin_check')->only(['restoreCompany']);
         $this->middleware('manager_check')->only(['getManagerCompanies']);
     }
@@ -33,6 +33,11 @@ class CompanyController extends Controller
     public function getManagerCompanies()
     {
         $companies = Company::with('manager','reviews')->where('manager_id',JWTAuth::user()->id)->where('deleted',0)->latest()->get();
+        return  CompanyReviewsResource::collection($companies);
+    }
+    public function getAllCompanies()
+    {
+        $companies = Company::with('manager','reviews')->latest()->get();
         return  CompanyReviewsResource::collection($companies);
     }
     /**
@@ -80,11 +85,21 @@ class CompanyController extends Controller
     public function show($name)
     {
         $name = str_replace('-',' ',$name);
-        $company =  Company::with('reviews')->where('name',$name)->first();
-        if(!$company)
-        return response()->json(['message'=>'Company not found'],404);
-        return  new CompanyReviewsCommentsResource($company);
+        $company =  Company::with('reviews')->where('name',$name)->where('deleted',0)->first();
+        if(!$company)   return response()->json(['message'=>'Company not found'],404);
+        else  return  new CompanyReviewsCommentsResource($company);
     }
+    public function getTwoCompanies($name1,$name2){
+        $name1 = str_replace('-',' ',$name1);
+        $name2 = str_replace('-',' ',$name2);
+        $companies =  Company::with('reviews')->where('name',$name1)->orWhere('name',$name2)->where('deleted',0)->latest()->get();
+        if($companies && count($companies)==2){
+            return  CompanyReviewsCommentsResource::collection($companies);
+        }
+        return response()->json(['message'=>'Companies not found'],404);
+
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -141,12 +156,14 @@ class CompanyController extends Controller
     public function deleteCompany($id)
     {
         $company = Company::findOrFail($id)->where('manager_id',JWTAuth::user()->id);
-        $company->update(['deleted'=>true]);
+        $company->deleted = 1;
+        $company->save();
         return  response()->json(['success'=>'company deleted successufuly']);
     }
     public function restoreCompany($id){
         $company = Company::findOrFail($id);
-        $company->update(['deleted'=>false]);
+        $company->deleted = 0;
+        $company->save();
         return  response()->json(['success'=>'company restored successufuly']);
     }
 }

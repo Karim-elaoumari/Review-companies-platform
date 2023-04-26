@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
+use App\Http\Resources\ReviewResource;
+use App\Http\Resources\IndustryResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CompanyReviewsResource extends JsonResource
@@ -29,6 +32,7 @@ class CompanyReviewsResource extends JsonResource
             'country_code' => $this->country_code,
             'address' => $this->address,
             'mission' => $this->mission,
+            'deleted' => $this->deleted,
             'stars' => $this->getStars($this->reviews->where('status',1)),
             'reviews_count' => $this->reviews->where('status',1)->count(),
             'reviews'=> ReviewResource::collection($this->reviews->where('status',1)),

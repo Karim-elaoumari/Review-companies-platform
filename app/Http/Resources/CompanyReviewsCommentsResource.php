@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\ReviewResource;
+use App\Http\Resources\IndustryResource;
 use App\Http\Resources\ReviewCommentsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 

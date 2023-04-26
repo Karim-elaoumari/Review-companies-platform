@@ -52,18 +52,28 @@ Route::controller(UserController::class)->group(function () {
     Route::put('update_email','updateEmail');
     Route::put('user/update_user_role','updateUserRole');
 })->middleware('auth:api');
+
+
+
 Route::apiresource('jobs', JobController::class);
+
 Route::apiresource('industries', IndustryController::class);
+
 Route::apiresource('companies', CompanyController::class);
 Route::controller(CompanyController::class)->group(function () {
-    Route::get('companies_manager','getManagerCompanies')->middleware('auth:api');
-    Route::post('delete_company/{id}','deleteCompany')->middleware('auth:api');
+    Route::get('get_all_companies','getAllCompanies');
+    Route::get('companies_manager','getManagerCompanies');
+    Route::post('delete_company/{id}','deleteCompany');
+    Route::post('restore_company/{id}','restoreCompany');
+    Route::get('get_two_companies/{name1}/{name2}','getTwoCompanies');
 
 });
 Route::apiresource('reviews', ReviewController::class);
 Route::controller(ReviewController::class)->group(function (){
     Route::get('reviews_manager','getRelatedReviews')->middleware('auth:api');
     Route::post('delete_review/{id}','deleteReview')->middleware('auth:api');
+    Route::get('get_all_reviews','getAllReviews')->middleware('auth:api');
+    Route::post('restore_review/{id}','','restoreReview')->middleware('auth:api');
 });
 
 Route::apiresource('comments', CommentController::class);
