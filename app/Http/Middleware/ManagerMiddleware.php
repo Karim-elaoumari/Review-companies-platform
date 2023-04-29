@@ -18,7 +18,7 @@ class ManagerMiddleware
     public function handle(Request $request, Closure $next)
     {
         if(JWTAuth::user()->role->name!='manager'){
-            return response()->json(['message' => "Your Don't have permission to make this action"], 403);
+            return response()->json(['message' => "Your Don't have permission to make this action as ".$role->name], 403);
         }
         return $next($request);
     }

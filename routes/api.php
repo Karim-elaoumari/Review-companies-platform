@@ -50,8 +50,10 @@ Route::controller(UserController::class)->group(function () {
     Route::put('update_password','updatePassword');
     Route::put('update_user_info','updateInfo');
     Route::put('update_email','updateEmail');
-    Route::put('user/update_user_role','updateUserRole');
-})->middleware('auth:api');
+    Route::put('switch_user_to_manager','switchUserToManager');
+    Route::put('switch_manager_to_user','switchManagerToUser');
+    Route::put('switch_manager_to_user_without_companies','switchManagerToUserWithoutCompanies');
+})->middleware('auth:api'); 
 
 
 

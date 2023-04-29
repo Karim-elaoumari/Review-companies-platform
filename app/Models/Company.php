@@ -19,7 +19,7 @@ class Company extends Model
         'website',
         'founded',
         'industry_id',
-        'manager_id',
+        'user_id',
         'employees',
         'revenue',
         'description',
@@ -28,16 +28,11 @@ class Company extends Model
         'address',
         'mission'
     ];
-
-    public function followers()
-    {
-        return $this->belongsToMany(User::class);
-    }
     public function industry()
     {
         return $this->belongsTo(Industry::class);
     }
-    public function manager()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

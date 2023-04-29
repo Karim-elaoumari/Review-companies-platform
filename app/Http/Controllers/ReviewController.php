@@ -41,7 +41,7 @@ class ReviewController extends Controller
         // get just the reviews where the manager id in the company table is equal to the user id
         $reviews =  Review::with('company','comments','user')->where('status',1)
         ->whereHas('company', function($q){
-            $q->where('manager_id', JWTAuth::user()->id);
+            $q->where('user_id', JWTAuth::user()->id);
         })
         ->latest()
         ->get();
@@ -142,7 +142,7 @@ class ReviewController extends Controller
     }
     public function deleteReview($id){
         $review = Review::whereHas('company', function($q){
-            $q->where('manager_id', JWTAuth::user()->id);
+            $q->where('user_id', JWTAuth::user()->id);
         })->orWhere('user_id',JWTAuth::user()->id)->where('id',$id)->first();
         $review->update(['status'=>0]);
         if($review){

@@ -66,8 +66,10 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'speciality' => $request->speciality,
             'job_id' => $request->job_id,
+            'role_id' => 1,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            
         ]);
         $user->save();
         // $user->assignRole('user');

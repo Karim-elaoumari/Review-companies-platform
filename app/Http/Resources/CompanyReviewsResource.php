@@ -24,7 +24,7 @@ class CompanyReviewsResource extends JsonResource
             'logo' => $this->logo,
             'founded' => $this->founded,
             'industry' => new IndustryResource($this->industry),
-            'manager' => new UserResource($this->manager),
+            'manager' => new UserResource($this->user),
             'employees' => $this->employees,
             'description' => $this->description,
             'revenue' => $this->revenue,

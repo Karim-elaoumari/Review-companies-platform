@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Resources\UserResource;
@@ -45,13 +47,13 @@ class UserController extends Controller
         ]);
         $user = JWTAuth::user();
         if ($request->hasFile('photo')) {
-            $oldImage = public_path('images/').$user->photo;
-            if (file_exists($oldImage)) {
+            $oldImage = public_path("images/").$user->photo;
+            if (file_exists($oldImage) && is_file($oldImage)){
                 unlink($oldImage);
             }
             $image = $request->file('photo');
             $imageName = time().'-'.$image->getClientOriginalName();
-            $image->move(public_path('images/'), $imageName);
+            $image->move(public_path('images'), $imageName);
             $user->photo = $imageName;
         }
         $user->first_name= $request->first_name;
@@ -97,12 +99,12 @@ class UserController extends Controller
     }
     public function switchUserToManager(request $request){
         $request->validate([
-            'user_id' =>'required|exists:users,id',
+            'manager_id' =>'required|exists:users,id',
         ]);
-        $user = User::findOrFail($request->user_id);
+        $user = User::findOrFail($request->manager_id);
         if($user->role->name=='user'){
-            $role = Role::where('name','manager')->first();
-            $user->role = $role;
+           
+            $user->role_id = 2;
             $user->save();
             return  response()->json([
                 'message'=>'User Role updated successfully'],200);
@@ -117,15 +119,14 @@ class UserController extends Controller
     }
     public function switchManagerToUser(request $request){
         $request->validate([
-            'user_id' =>'required|exists:users,id',
-            'second_user_id' =>'required|exists:users,id',
+            'manager_id' =>'required|exists:users,id',
+            'second_manager_id' =>'required|exists:users,id',
         ]);
-        $user = User::findOrFail($request->user_id);
-        $second_user = User::findOrFail($request->second_user_id);
-        if($user->role->name=='manager' && $second_user->role->name=='manager'){
-            if(self::switchAllCompaniesToAnotherManager($request->user_id,$request->second_user_id)){
-                $role = Role::where('name','user')->first();
-                $user->role = $role;
+        $user = User::findOrFail($request->manager_id);
+        $second_user = User::findOrFail($request->second_manager_id);
+        if($user->role->name=='manager' && $second_user->role->name=='manager' && $user->id!=$second_user->id){
+            if(self::switchAllCompaniesToAnotherManager($user,$request->second_manager_id)){
+                $user->role_id = 1;
                 $user->save();
                 return  response()->json([
                     'message'=>'User Role updated successfully'],200);
@@ -136,15 +137,35 @@ class UserController extends Controller
            
         }
         else{
-            return  response()->json(['message'=>'this is not a manager to be switched to user  or the second user that you what to switch companies in not manager'],422);
+            return  response()->json(['message'=>'this is not a manager to be switched  or the second user that you what to switch companies in not manager'],422);
         }
     }
-    private function switchAllCompaniesToAnotherManager($manager_id,$second_manager_id){
-        $companies = Company::where('manager_id',$manager_id)->latest()->get();
+    
+    private function switchAllCompaniesToAnotherManager($manager,$second_manager_id){
+        $companies = $manager->companies;
         foreach($companies as $company){
-            $company->manager_id = $second_manager_id;
+            $company->user_id = $second_manager_id;
             $company->save();
         }
         return true;
+    }
+    public function switchManagerToUserWithoutCompanies(request $request){
+        $request->validate([
+            'manager_id' =>'required|exists:users,id',
+            
+        ]);
+        $user = User::findOrFail($request->manager_id);
+        
+        if($user->role->name=='manager'){
+           
+                $user->role_id = 1;
+                $user->save();
+                return  response()->json([
+                    'message'=>'User Role updated successfully'],200);
+           
+        }
+        else{
+            return  response()->json(['message'=>'this is not a manager to be switched '],422);
+        }
     }
 }

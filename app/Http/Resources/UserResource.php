@@ -18,12 +18,13 @@ class UserResource extends JsonResource
             'id'         => $this->id,
             'first_name' => $this->first_name,
             'last_name'  => $this->last_name,
-            'photo'      => 'http://localhost:8000/images/'.$this->photo,
+            'photo'      => $this->photo!=null ? 'http://localhost:8000/images/'.$this->photo : 'https://www.citypng.com/public/uploads/small/11639786938ezifytzfr8tbs8nzjsjdc1z0aqtrhyhq1zkujoyerqksff9tsl1f7vg9k1ujbojemibzdoayolcjrzbhp4euwhqjtyfa00tk9okr.png',
             'email'      => $this->email,
             'speciality' =>$this->speciality,
             'job'        => $this->job->name,
             'job_id'     => $this->job_id,
-            'role'       => $this->role->name
+            'role'       => $this->role->name,
+            'companies_count' => $this->companies!=null ? $this->companies->count() : 0,
          ];
     }
 }

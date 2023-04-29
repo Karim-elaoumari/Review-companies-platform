@@ -27,7 +27,7 @@ class CompanyFactory extends Factory
             'logo' => fake()->imageUrl(),
             'website' => fake()->url(),
             'founded' => fake()->year(),
-            'manager_id' => User::factory(),
+            'user_id' => User::factory(),
             'industry_id' => Arr::random($industries),
             'employees' => fake()->numberBetween($min = 1, $max = 1000),
             'revenue' => fake()->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 100000000),

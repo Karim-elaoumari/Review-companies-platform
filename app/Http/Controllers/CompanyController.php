@@ -26,18 +26,18 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies =  Company::with('manager','reviews')->where('deleted',false)->latest()->get();
+        $companies =  Company::with('user','reviews')->where('deleted',false)->latest()->get();
         return  CompanyReviewsResource::collection($companies);
 
     }
     public function getManagerCompanies()
     {
-        $companies = Company::with('manager','reviews')->where('manager_id',JWTAuth::user()->id)->where('deleted',0)->latest()->get();
+        $companies = Company::with('user','reviews')->where('user_id',JWTAuth::user()->id)->where('deleted',0)->latest()->get();
         return  CompanyReviewsResource::collection($companies);
     }
     public function getAllCompanies()
     {
-        $companies = Company::with('manager','reviews')->latest()->get();
+        $companies = Company::with('user','reviews')->latest()->get();
         return  CompanyReviewsResource::collection($companies);
     }
     /**
@@ -64,7 +64,7 @@ class CompanyController extends Controller
             'logo'=>$request->logo,
             'founded'=>$request->foundation_year,
             'industry_id'=>$request->industry, 
-            'manager_id'=>JWTAuth::user()->id,
+            'user_id'=>JWTAuth::user()->id,
             'employees'=>$request->employees, 
             'revenue'=>$request->revenue, 
             'description'=>$request->description,
@@ -73,7 +73,8 @@ class CompanyController extends Controller
             'address'=>$request->address,
             'mission'=>$request->mission,
         ]);
-        $this->index();
+        $companies =  Company::with('user','reviews')->where('deleted',false)->latest()->get();
+        return  CompanyReviewsResource::collection($companies);
     }
 
     /**
@@ -137,8 +138,8 @@ class CompanyController extends Controller
             'address'=>$request->address,
             'mission'=>$request->mission,
        ]);
-       $companies =  Company::with('reviews','manager')->latest()->get();
-       return  CompanyReviewsResource::collection($companies);
+       $companies =  Company::with('user','reviews')->where('deleted',false)->latest()->get();
+        return  CompanyReviewsResource::collection($companies);
     }
 
     /**
@@ -155,7 +156,7 @@ class CompanyController extends Controller
     }
     public function deleteCompany($id)
     {
-        $company = Company::findOrFail($id)->where('manager_id',JWTAuth::user()->id);
+        $company = Company::findOrFail($id)->where('user_id',JWTAuth::user()->id);
         $company->deleted = 1;
         $company->save();
         return  response()->json(['success'=>'company deleted successufuly']);

@@ -32,12 +32,17 @@ class User extends Authenticatable implements JWTSubject
         'last_name',
         'speciality',
         'job_id',
+        'role_id',
         'email',
         'password',
         'photo',
     ];
     public function job(){
         return $this->belongsTo(Job::class);
+    }
+    public function companies()
+    {
+        return $this->hasMany(Company::class);
     }
     public function role(){
         return $this->belongsTo(Role::class);
